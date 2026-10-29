@@ -130,7 +130,7 @@ footer p{font-size:12px;line-height:1.4}
   .travel-card-head img{width:92px;height:65px}
   .journey-card{grid-template-columns:88px minmax(0,1fr)}
   .journey-card img{width:88px;height:108px}
-  .itinerary,.tour-paper .itinerary{background-image:none;background-color:#f4e7ce;border-radius:4px;padding:24px 18px}
+  .itinerary,.tour-paper .itinerary{background:#800000 url('assets/itinerary-paper.webp') center/100% 100% no-repeat;border-radius:0;padding:42px 30px 50px}
   .itinerary .paper-bg{display:none}
   .itinerary article,.tour-paper .itinerary article{gap:10px}
   .itinerary article p,.tour-paper .itinerary article p{min-width:0;overflow-wrap:anywhere;font-size:14px}
