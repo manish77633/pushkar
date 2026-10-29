@@ -1,20 +1,21 @@
 const menuButton = document.querySelector('.menu-toggle');
 const menu = document.querySelector('#mobile-menu');
+const closeMenu = () => {
+  menu.classList.remove('open');
+  menuButton.setAttribute('aria-expanded', 'false');
+  menuButton.setAttribute('aria-label', 'Open menu');
+};
 menuButton.addEventListener('click', () => {
   const open = menu.classList.toggle('open');
   menuButton.setAttribute('aria-expanded', String(open));
   menuButton.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
 });
-menu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
-  menu.classList.remove('open');
-  menuButton.setAttribute('aria-expanded', 'false');
-  menuButton.setAttribute('aria-label', 'Open menu');
-}));
+menu.querySelectorAll('a').forEach(link => link.addEventListener('click', closeMenu));
 document.addEventListener('keydown', event => {
-  if (event.key === 'Escape') {
-    menu.classList.remove('open');
-    menuButton.setAttribute('aria-expanded', 'false');
-  }
+  if (event.key === 'Escape') closeMenu();
+});
+document.addEventListener('click', event => {
+  if (menu.classList.contains('open') && !event.target.closest('.site-header')) closeMenu();
 });
 
 const contactForm = document.querySelector('#contact-form');
@@ -104,10 +105,10 @@ if (contactForm) {
 }
 
 const pageLinks = document.querySelectorAll('.sidebar a, .mobile-menu a');
-const currentFile = location.pathname.split('/').pop() || 'index.html';
+const currentRoute = document.body.dataset.pageRoute;
 pageLinks.forEach(link => {
   link.classList.remove('active');
-  if (!link.hash && link.getAttribute('href') === currentFile) link.classList.add('active');
+  if (!link.hash && link.getAttribute('href') === `/${currentRoute}`) link.classList.add('active');
 });
 
 const sections = [...document.querySelectorAll('[data-nav-section]')];
@@ -125,9 +126,9 @@ if (sections.length) {
 
 // Keep long copy readable on content pages without hiding navigation or forms.
 document.querySelectorAll('main p').forEach((paragraph, index) => {
-  if (paragraph.textContent.trim().length < 360 || paragraph.closest('form')) return;
+  if (paragraph.textContent.trim().length < 360 || paragraph.closest('form, .tour-paper, .itinerary')) return;
 
-  const inCompactLayout = paragraph.parentElement.matches('.itinerary article, .schedule-day');
+  const inCompactLayout = paragraph.parentElement.matches('.schedule-day');
   let container = paragraph.parentElement;
   if (inCompactLayout) {
     container = document.createElement('div');

@@ -9,27 +9,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Lato:wght@400;500;600;700&family=Poppins:wght@600&family=Source+Sans+3:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="shared-layout.js" defer></script>
   <script src="script.js" defer></script>
 </head>
-<body>
+<body data-page-route="contact-us">
   <div class="site-shell" id="top">
-    <header class="site-header">
-      <a class="tagline" href="index.html">Experience India’s greatest tribal gathering</a>
-      <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><span></span><span></span><span></span></button>
-      <nav class="mobile-menu" id="mobile-menu" aria-label="Main navigation"><h2>Pushkar Camel Fair</h2><a href="index.html">Pushkar Fair</a><a href="programme.html">Pushkar Fair Dates 2026</a><a href="photography.html">Photography</a><a href="culture-and-communities.html">Local people &amp; Communities</a><a href="luxury-tours.html">Pushkar Tours</a><a href="gallery.html">Pushkar Fair Photo Gallery</a><a href="contact.html">Contact Us</a><h2>Tours</h2><a href="glimpses-of-india.html">Glimpses of India tour</a><a href="pushkar-dev-diwali.html">Divine Diwali tour</a><a href="haveli-diwali.html">Haveli Diwali tour</a></nav>
-    </header>
+    <div data-shared-header></div>
     <div class="hero"><img src="assets/Pushkar site Images copy.webp" alt="Contact Us | Pushkar Camel Fair"></div>
     <div class="content-grid">
       <main class="inner-page"><div class="page-heading"><h1>Contact Us</h1></div><form class="contact-form" id="contact-form" method="post" action="#" data-recipient="manishkumar20047877@gmail.com" data-whatsapp-number=""><div class="form-grid"><label>Name<input name="name" required minlength="2" maxlength="80" pattern="[A-Za-z ]+" title="Use letters and spaces only" autocomplete="name"></label><label>Country<input name="country" required minlength="2" maxlength="80" pattern="[A-Za-z .'-]+" title="Use letters and spaces only" autocomplete="country-name"></label><label>Date of Travel<input name="travelDate" type="date" required></label><label>Number of Travellers<input name="travellers" type="number" min="1" max="50" required></label><label class="full">Email<input name="email" type="email" maxlength="254" required autocomplete="email"></label><label class="full">Mobile number<input name="mobile" type="tel" inputmode="tel" maxlength="16" pattern="[+]?[0-9 ]{10,16}" title="Enter a valid mobile number" required></label><label class="full">Message<textarea name="message" rows="7" minlength="10" maxlength="1000" required></textarea></label></div><div class="form-actions"><button type="submit" data-channel="email">Send on Email</button><button type="submit" data-channel="whatsapp">Send on WhatsApp</button></div><p class="form-note">The email button prepares a draft addressed to manishkumar20047877@gmail.com. Press Send in your mail app to deliver it.</p></form><noscript><p class="form-note">Please enable JavaScript to prepare your enquiry.</p></noscript></main>
-      <aside class="sidebar" aria-label="Explore Pushkar Camel Fair">
- <div class="side-block"><h2>Pushkar Camel Fair</h2><nav><a href="index.html">Pushkar Fair</a><a href="programme.html">Pushkar Fair dates 2026</a><a href="photography.html">Photography</a><a href="culture-and-communities.html">Local people &amp; communities</a><a href="luxury-tours.html">Pushkar Tours</a><a href="gallery.html">Pushkar Fair Photo Gallery</a><a href="contact.html">Contact Us</a></nav></div>
- <div class="side-block tours"><h2>Tours</h2><h3><a href="glimpses-of-india.html">Glimpses of India</a></h3><p>Journey through old Rajasthan in style: stay in a restored 1860s frescoed haveli in Shekhawati, share a family picnic on an Aravalli farm, then discover Jodhpur’s blue lanes and Jaisalmer’s golden fort.</p></div>
- <div class="side-block tours"><h3><a href="haveli-diwali.html">Haveli Diwali Tour</a></h3><p>Celebrate Diwali the way Rajasthan has for generations at Mukunda Haveli, a restored 18th-century mansion in Shekhawati. Continue through Rajasthan’s historic desert cities and experience the spectacular Pushkar Camel Fair.</p></div>
- <div class="side-block tours"><h3><a href="pushkar-dev-diwali.html">Pushkar Fair &amp; Dev Diwali</a></h3><p>Pushkar Fair and Varanasi’s Dev Deepavali celebrations on one small group journey.</p></div>
- <div class="side-block side-promo"><a href="pushkar-dev-diwali.html"><img src="assets/varanasi-dev-diwali-luxury-tour.webp" alt="Dev Diwali tour in Varanasi"></a></div>
- </aside>
+      <div data-shared-sidebar></div>
     </div>
-    <footer id="contact"><p>Copyright © Indian Moments 2007–2026. All rights reserved. No part of this site may be reproduced without authorisation.</p></footer>
+    <div data-shared-footer></div>
   </div>
 </body>
 </html>

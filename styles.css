@@ -110,7 +110,6 @@ footer p{font-size:12px;line-height:1.4}
 .read-more-toggle[aria-expanded="true"] .read-more-arrow{transform:translateY(2px) rotate(225deg)}
 .read-more-wrap{min-width:0;flex:1}
 .read-more-wrap p{margin-bottom:3px}
-.itinerary .read-more-toggle{color:#8a4209}
 .schedule-day .read-more-wrap{min-width:0}
 @media(max-width:600px){.read-more-copy:not(.expanded){-webkit-line-clamp:5}}
 
@@ -118,6 +117,10 @@ footer p{font-size:12px;line-height:1.4}
 .site-header{align-items:center}
 .tagline{font-size:clamp(28px,4vw,48px);line-height:1;transform:none;min-width:0}
 .menu-toggle{flex:none;margin:0 0 0 20px}
+.menu-toggle span{transition:transform .2s ease,opacity .2s ease;transform-origin:center}
+.menu-toggle[aria-expanded="true"] span:first-child{transform:translateY(7px) rotate(45deg)}
+.menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.menu-toggle[aria-expanded="true"] span:last-child{transform:translateY(-7px) rotate(-45deg)}
 
 /* Shared narrow-screen layout. */
 @media(max-width:600px){
