@@ -85,14 +85,20 @@ if (contactForm) {
     }
     const subject = `Pushkar Camel Fair enquiry: ${data.pageId}`;
     const mailto = `mailto:${contactForm.dataset.recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    const gmail = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(contactForm.dataset.recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     status.textContent = 'Email draft opened with your details. Please press Send in your mail app. If it did not open, ';
-    const fallback = document.createElement('a');
-    fallback.href = gmail;
-    fallback.target = '_blank';
-    fallback.rel = 'noopener noreferrer';
-    fallback.textContent = 'open the draft in Gmail';
-    status.append(fallback, '.');
+    const copyButton = document.createElement('button');
+    copyButton.type = 'button';
+    copyButton.className = 'copy-enquiry';
+    copyButton.textContent = 'copy enquiry';
+    copyButton.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(`To: ${contactForm.dataset.recipient}\nSubject: ${subject}\n\n${body}`);
+        status.firstChild.textContent = 'Enquiry copied. Paste it into your email and press Send. ';
+      } catch {
+        status.firstChild.textContent = 'Copy failed. Please use your mail app to send the enquiry. ';
+      }
+    });
+    status.append(copyButton, '.');
     window.location.href = mailto;
   });
 }
