@@ -99,3 +99,63 @@ footer p{font-size:12px;line-height:1.4}
 .form-status:not(:empty){border:1px solid #e6a053;background:#6d0000;border-radius:7px;padding:10px 14px;color:#ffe6c8}
 .form-status a{color:#ffbd65;text-decoration:underline;text-underline-offset:2px}
 .form-status .copy-enquiry{border:0;background:none;padding:0;color:#ffbd65;text-decoration:underline;text-underline-offset:2px;font:inherit;cursor:pointer}
+
+/* Keep the brand line inside the desktop navigation bar. */
+.site-header{align-items:center}
+.tagline{font-size:clamp(28px,4vw,48px);line-height:1;transform:none;min-width:0}
+.menu-toggle{flex:none;margin:0 0 0 20px}
+
+/* XD mobile prototype: a narrow red canvas with an image-led accordion. */
+.mobile-stories{display:none}
+@media(max-width:600px){
+  html,body{width:100%;overflow-x:clip}
+  body{background:#790000 url('assets/BG.jpg') center top/auto 100% repeat-y}
+  .site-shell{width:100%;padding:0 12px 16px}
+  .site-header{height:66px;align-items:center}
+  .tagline{font-size:clamp(20px,5.8vw,28px);line-height:1;max-width:calc(100% - 44px);transform:none;white-space:nowrap;overflow:hidden;text-overflow:clip}
+  .menu-toggle{flex:none;width:38px;height:38px;margin:0 0 0 5px;padding:7px}
+  .mobile-menu{right:-12px;width:min(320px,calc(100vw - 24px));max-height:calc(100dvh - 66px);overflow-y:auto}
+  .hero img{height:auto;min-height:0;aspect-ratio:2.05;object-fit:cover}
+  .content-grid{display:block;padding:34px 10px 42px}
+  .page-heading h1,.site-section .page-heading h1{font-size:24px;letter-spacing:.12em;overflow-wrap:anywhere}
+  .page-heading p{font-size:12px}
+  main p,main li{font-size:15px;line-height:1.5}
+  main img{max-width:100%;height:auto}
+  .feature-photo{aspect-ratio:1.6}
+  .sidebar{display:none}
+  .gallery-grid,.form-grid{grid-template-columns:1fr}
+  .contact-form .full{grid-column:auto}
+  .contact-form input,.contact-form textarea{min-width:0}
+  .travel-card-head{align-items:flex-start}
+  .travel-card-head img{width:92px;height:65px}
+  .journey-card{grid-template-columns:88px minmax(0,1fr)}
+  .journey-card img{width:88px;height:108px}
+  .itinerary,.tour-paper .itinerary{background-image:none;background-color:#f4e7ce;border-radius:4px;padding:24px 18px}
+  .itinerary .paper-bg{display:none}
+  .itinerary article,.tour-paper .itinerary article{gap:10px}
+  .itinerary article p,.tour-paper .itinerary article p{min-width:0;overflow-wrap:anywhere;font-size:14px}
+  .schedule-day{grid-template-columns:1fr;gap:4px}
+  .schedule-day p{overflow-wrap:anywhere}
+  footer{margin:0 10px;padding:12px 8px 28px}
+  body:has(#visitor-guide) .content-grid{padding-top:29px}
+  #visitor-guide{margin-bottom:14px}
+  #visitor-guide p{display:none}
+  #visitor-guide~section,#visitor-guide~.pill-button{display:none}
+  .mobile-stories{display:block}
+  .mobile-story{margin:0 0 22px}
+  .mobile-story summary{position:relative;display:block;list-style:none;padding:13px 31px 13px 0;color:var(--white);font:400 21px/1.25 'Lato',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
+  .mobile-story summary::-webkit-details-marker{display:none}
+  .mobile-story summary::after{content:'';position:absolute;right:3px;top:19px;width:11px;height:11px;border-right:2px solid white;border-bottom:2px solid white;transform:rotate(45deg)}
+  .mobile-story[open] summary::after{top:24px;transform:rotate(225deg)}
+  .mobile-story-body{padding:10px 2px 15px}
+  .mobile-story-body p{font-size:14px;line-height:1.48}
+  .mobile-story-body a{color:var(--white);font-weight:700;text-decoration:none}
+  .mobile-story-body img{display:block;width:100%;height:auto;margin:0 0 15px;object-fit:cover}
+  .mobile-story .tips{margin:0}
+  .mobile-story .tips li{font-size:14px;padding-left:27px;margin-bottom:18px}
+  .mobile-story .tips li::before{width:17px;height:17px}
+  .mobile-story-photos{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:18px -2px 0}
+  .mobile-story-photos img{width:100%;height:115px;object-fit:cover;margin:0}
+  body:has(#visitor-guide) .content-grid main::after{content:'';display:block;margin-top:10px}
+}
+@media(max-width:360px){.site-shell{padding-inline:7px}.content-grid{padding-inline:7px}.tagline{font-size:20px}.mobile-story summary{font-size:18px}}

@@ -123,3 +123,58 @@ if (sections.length) {
   updateActiveSection();
 }
 
+// The XD mobile artboards use compact, independently expandable home sections.
+const homeMain = document.querySelector('#visitor-guide')?.closest('main');
+if (homeMain) {
+  const mobileStories = document.createElement('div');
+  mobileStories.className = 'mobile-stories';
+  const addStory = (title, content, open = false) => {
+    const details = document.createElement('details');
+    details.className = 'mobile-story';
+    details.open = open;
+    const summary = document.createElement('summary');
+    summary.textContent = title;
+    const body = document.createElement('div');
+    body.className = 'mobile-story-body';
+    body.append(content);
+    details.append(summary, body);
+    mobileStories.append(details);
+  };
+  const photoPage = 'photography.html';
+  const photoIntro = document.createElement('p');
+  photoIntro.innerHTML = 'You are going to find many photographers around the dunes in the camels area at any point of the day. While this can be found annoying, the scene is attractive enough for anyone to capture. Camels are large living… <a href="' + photoPage + '">Read More</a>';
+  addStory('Photography', photoIntro, true);
+  const survival = homeMain.querySelector('.survival-section');
+  if (survival) {
+    const list = survival.querySelector('.tips')?.cloneNode(true);
+    if (list) addStory('Fair survival guide', list);
+  }
+  const orientation = homeMain.querySelector('.intro-section');
+  if (orientation) {
+    const body = document.createElement('div');
+    const photo = document.createElement('img');
+    photo.src = 'assets/Pushkar site Images copy.webp';
+    photo.alt = 'Busy street at Pushkar Fair';
+    body.append(photo, orientation.querySelector('p').cloneNode(true));
+    addStory('General orientation', body);
+  }
+  const final = homeMain.querySelector('.final-section');
+  if (final) {
+    const body = document.createElement('div');
+    body.append(final.querySelector('p').cloneNode(true));
+    const photos = document.createElement('div');
+    photos.className = 'mobile-story-photos';
+    for (const src of ['assets/home-hero.png', 'assets/pushkar-camel-fair-event-photo.webp']) {
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = 'Scenes from Pushkar Fair';
+      photos.append(img);
+    }
+    body.append(photos);
+    addStory(final.querySelector('h2').textContent, body, true);
+  }
+  const enquiry = homeMain.querySelector('.pill-button')?.cloneNode(true);
+  if (enquiry) mobileStories.append(enquiry);
+  homeMain.querySelector('.page-heading')?.after(mobileStories);
+}
+
