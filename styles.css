@@ -99,6 +99,9 @@ footer p{font-size:12px;line-height:1.4}
 .form-status:not(:empty){border:1px solid #e6a053;background:#6d0000;border-radius:7px;padding:10px 14px;color:#ffe6c8}
 .form-status a{color:#ffbd65;text-decoration:underline;text-underline-offset:2px}
 .form-status .copy-enquiry{border:0;background:none;padding:0;color:#ffbd65;text-decoration:underline;text-underline-offset:2px;font:inherit;cursor:pointer}
+.gallery-grid a{display:block}
+.gallery-grid a:hover img{filter:brightness(1.08)}
+.gallery-grid a:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
 
 /* Keep the brand line inside the desktop navigation bar. */
 .site-header{align-items:center}
