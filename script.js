@@ -123,3 +123,33 @@ if (sections.length) {
   updateActiveSection();
 }
 
+// Keep long copy readable on content pages without hiding navigation or forms.
+document.querySelectorAll('main p').forEach((paragraph, index) => {
+  if (paragraph.textContent.trim().length < 360 || paragraph.closest('form')) return;
+
+  const inCompactLayout = paragraph.parentElement.matches('.itinerary article, .schedule-day');
+  let container = paragraph.parentElement;
+  if (inCompactLayout) {
+    container = document.createElement('div');
+    container.className = 'read-more-wrap';
+    paragraph.before(container);
+    container.append(paragraph);
+  }
+
+  const id = `read-more-copy-${index}`;
+  paragraph.id ||= id;
+  paragraph.classList.add('read-more-copy');
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'read-more-toggle';
+  button.setAttribute('aria-controls', paragraph.id);
+  button.setAttribute('aria-expanded', 'false');
+  button.innerHTML = 'Read More <span class="read-more-arrow" aria-hidden="true"></span>';
+  paragraph.after(button);
+  button.addEventListener('click', () => {
+    const expanded = paragraph.classList.toggle('expanded');
+    button.setAttribute('aria-expanded', String(expanded));
+    button.innerHTML = `${expanded ? 'Read Less' : 'Read More'} <span class="read-more-arrow" aria-hidden="true"></span>`;
+  });
+});
+
