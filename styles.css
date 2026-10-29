@@ -105,8 +105,7 @@ footer p{font-size:12px;line-height:1.4}
 .tagline{font-size:clamp(28px,4vw,48px);line-height:1;transform:none;min-width:0}
 .menu-toggle{flex:none;margin:0 0 0 20px}
 
-/* XD mobile prototype: a narrow red canvas with an image-led accordion. */
-.mobile-stories{display:none}
+/* Shared narrow-screen layout. */
 @media(max-width:600px){
   html,body{width:100%;overflow-x:clip}
   body{background:#790000 url('assets/BG.jpg') center top/auto 100% repeat-y}
@@ -137,25 +136,6 @@ footer p{font-size:12px;line-height:1.4}
   .schedule-day{grid-template-columns:1fr;gap:4px}
   .schedule-day p{overflow-wrap:anywhere}
   footer{margin:0 10px;padding:12px 8px 28px}
-  body:has(#visitor-guide) .content-grid{padding-top:29px}
-  #visitor-guide{margin-bottom:14px}
-  #visitor-guide p{display:none}
-  #visitor-guide~section,#visitor-guide~.pill-button{display:none}
-  .mobile-stories{display:block}
-  .mobile-story{margin:0 0 22px}
-  .mobile-story summary{position:relative;display:block;list-style:none;padding:13px 31px 13px 0;color:var(--white);font:400 21px/1.25 'Lato',sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}
-  .mobile-story summary::-webkit-details-marker{display:none}
-  .mobile-story summary::after{content:'';position:absolute;right:3px;top:19px;width:11px;height:11px;border-right:2px solid white;border-bottom:2px solid white;transform:rotate(45deg)}
-  .mobile-story[open] summary::after{top:24px;transform:rotate(225deg)}
-  .mobile-story-body{padding:10px 2px 15px}
-  .mobile-story-body p{font-size:14px;line-height:1.48}
-  .mobile-story-body a{color:var(--white);font-weight:700;text-decoration:none}
-  .mobile-story-body img{display:block;width:100%;height:auto;margin:0 0 15px;object-fit:cover}
-  .mobile-story .tips{margin:0}
-  .mobile-story .tips li{font-size:14px;padding-left:27px;margin-bottom:18px}
-  .mobile-story .tips li::before{width:17px;height:17px}
-  .mobile-story-photos{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:18px -2px 0}
-  .mobile-story-photos img{width:100%;height:115px;object-fit:cover;margin:0}
-  body:has(#visitor-guide) .content-grid main::after{content:'';display:block;margin-top:10px}
+
 }
-@media(max-width:360px){.site-shell{padding-inline:7px}.content-grid{padding-inline:7px}.tagline{font-size:20px}.mobile-story summary{font-size:18px}}
+@media(max-width:360px){.site-shell{padding-inline:7px}.content-grid{padding-inline:7px}.tagline{font-size:20px}}
