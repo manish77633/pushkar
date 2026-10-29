@@ -26,37 +26,74 @@ if (contactForm) {
   const pageField = document.createElement('input');
   pageField.type = 'hidden';
   pageField.name = 'pageId';
-  pageField.value = new URLSearchParams(location.search).get('page') || location.pathname.split('/').pop() || 'contact';
+  const allowedPages = new Set([
+    'pushkar-fair', 'pushkar-fair-2027', 'pushkar-tours',
+    'haveli-diwali', 'glimpses-of-india', 'pushkar-dev-diwali'
+  ]);
+  const requestedPage = new URLSearchParams(location.search).get('page');
+  pageField.value = allowedPages.has(requestedPage) ? requestedPage : 'general-enquiry';
   contactForm.append(pageField);
-  contactForm.addEventListener('submit', async event => {
+  contactForm.addEventListener('submit', event => {
     event.preventDefault();
     if (!contactForm.reportValidity()) return;
     const clicked = event.submitter;
+    const data = Object.fromEntries(new FormData(contactForm));
+    const name = data.name.trim();
+    const country = data.country.trim();
+    const email = data.email.trim();
+    const mobile = data.mobile.trim();
+    const message = data.message.trim();
+    const digits = mobile.replace(/\D/g, '');
+    const today = new Date();
+    const localToday = [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, '0'),
+      String(today.getDate()).padStart(2, '0')
+    ].join('-');
+    const invalid = (field, messageText) => {
+      status.textContent = messageText;
+      contactForm.elements[field].focus();
+    };
+    if (!/^[A-Za-z ]{2,80}$/.test(name)) return invalid('name', 'Please enter a name using letters and spaces only.');
+    if (!/^[A-Za-z .'-]{2,80}$/.test(country)) return invalid('country', 'Please enter a valid country name.');
+    if (!contactForm.elements.email.checkValidity() || email.length > 254) return invalid('email', 'Please enter a valid email address.');
+    if (data.travelDate < localToday) return invalid('travelDate', 'Please choose a future travel date.');
+    if (!Number.isInteger(Number(data.travellers)) || Number(data.travellers) < 1 || Number(data.travellers) > 50) return invalid('travellers', 'Please enter 1 to 50 travellers.');
+    if (!/^\+?[0-9 ]+$/.test(mobile) || digits.length < 10 || digits.length > 15) return invalid('mobile', 'Please enter a valid mobile number with 10 to 15 digits.');
+    if (message.length < 10 || message.length > 1000) return invalid('message', 'Please write a message of 10 to 1000 characters.');
+    const body = [
+      `Page: ${data.pageId}`,
+      `Name: ${name}`,
+      `Country: ${country}`,
+      `Date of travel: ${data.travelDate}`,
+      `Travellers: ${data.travellers}`,
+      `Email: ${email}`,
+      `Mobile: ${mobile}`,
+      '',
+      'Message:',
+      message
+    ].join('\n');
     if (clicked?.dataset.channel === 'whatsapp') {
-      status.textContent = 'WhatsApp recipient number is not set yet. Please use Send on Email.';
+      const configuredNumber = contactForm.dataset.whatsappNumber || '';
+      const number = /^\d{10,15}$/.test(configuredNumber) ? configuredNumber : '';
+      const shareUrl = `https://wa.me/${number}?text=${encodeURIComponent(`Pushkar Camel Fair enquiry\n\n${body}`)}`;
+      status.textContent = number
+        ? 'WhatsApp chat opened with your enquiry. Please press Send there.'
+        : 'WhatsApp opened with your enquiry. Choose a contact and press Send.';
+      window.location.href = shareUrl;
       return;
     }
-    const button = clicked || contactForm.querySelector('[data-channel="email"]');
-    button.disabled = true;
-    status.textContent = 'Sending your enquiry…';
-    const data = Object.fromEntries(new FormData(contactForm));
-    data._subject = `Pushkar Camel Fair enquiry: ${data.pageId}`;
-    data._captcha = 'false';
-    try {
-      const response = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(contactForm.dataset.recipient)}`, {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        body: JSON.stringify(data)
-      });
-      const result = await response.json();
-      if (!response.ok || result.success === false || result.success === 'false') throw new Error(result.message || 'Delivery failed');
-      status.textContent = 'Enquiry submitted. Thank you!';
-      contactForm.reset();
-    } catch (error) {
-      status.textContent = 'Enquiry could not be sent. Please try again in a moment.';
-    } finally {
-      button.disabled = false;
-    }
+    const subject = `Pushkar Camel Fair enquiry: ${data.pageId}`;
+    const mailto = `mailto:${contactForm.dataset.recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    const gmail = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(contactForm.dataset.recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    status.textContent = 'Email draft opened with your details. Please press Send in your mail app. If it did not open, ';
+    const fallback = document.createElement('a');
+    fallback.href = gmail;
+    fallback.target = '_blank';
+    fallback.rel = 'noopener noreferrer';
+    fallback.textContent = 'open the draft in Gmail';
+    status.append(fallback, '.');
+    window.location.href = mailto;
   });
 }
 

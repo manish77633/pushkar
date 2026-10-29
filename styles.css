@@ -96,3 +96,5 @@ footer p{font-size:12px;line-height:1.4}
 .xd-dev-page .tour-dates{margin-top:32px;letter-spacing:.04em;text-transform:uppercase}
 .xd-dev-page .tour-paper-note a{color:#8e5221;text-decoration:none}
 .xd-dev-page .tour-paper-note a:hover{text-decoration:underline}
+.form-status:not(:empty){border:1px solid #e6a053;background:#6d0000;border-radius:7px;padding:10px 14px;color:#ffe6c8}
+.form-status a{color:#ffbd65;text-decoration:underline;text-underline-offset:2px}
