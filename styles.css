@@ -1319,6 +1319,12 @@ a:focus-visible {
     font-size: 25px;
     padding: 6px 16px;
   }
+  .pill-button.small[href^="/contact-us"] {
+    display: flex;
+    width: max-content;
+    max-width: 100%;
+    margin-left: auto;
+  }
   footer#contact p {
     font-size: 14px;
     color: #ffe7ba;
