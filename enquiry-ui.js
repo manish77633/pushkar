@@ -167,7 +167,7 @@
       success.addEventListener('close', () => success.remove());
       success.showModal();
     } catch (error) {
-      status.textContent = `${error.message}${captchaEnabled ? ' Complete the CAPTCHA again before retrying.' : ''}`;
+      status.textContent = error.message;
       if (widgetId !== null) window.grecaptcha.reset(widgetId);
       status.setAttribute('tabindex', '-1');
       status.focus();

@@ -5,11 +5,14 @@ const handler = require('../api/enquiry');
 
 for (const key of ['SMTP_USER','SMTP_PASS','RECEIVER_EMAIL','RECAPTCHA_SECRET_KEY']) process.env[key] = 'test-value';
 const valid = () => ({name:'Jane Doe',country:'India',email:'jane@example.com',mobile:'9876543210',message:'I would like to visit Pushkar.',issuedAt:Date.now()-10000,recaptchaToken:'valid',sourcePage:'Pushkar Fair',sourceSection:'Tour itinerary',pageUrl:'https://example.com/pushkar-fair',website:''});
-let sent, failMail, invalidChallenge, captchaErrorCode;
+let sent, failMail, invalidChallenge, captchaErrorCode, transportOptions;
 beforeEach(() => {
   process.env.CAPTCHA_ENABLED = 'true';
+  process.env.SMTP_USER = 'test-value';
+  process.env.SMTP_HOST = 'smtp.gmail.com';
+  process.env.SMTP_PORT = '587';
   sent = []; failMail = false; invalidChallenge = false; captchaErrorCode = '';
-  nodemailer.createTransport = () => ({sendMail: async data => { if (failMail) throw Object.assign(new Error('SMTP unavailable'), {code:'ECONNECTION'}); sent.push(data); }});
+  nodemailer.createTransport = options => { transportOptions = options; return {sendMail: async data => { if (failMail) throw Object.assign(new Error('SMTP unavailable'), {code:'ECONNECTION'}); sent.push(data); }}; };
   global.fetch = async (url, options) => {
     if (String(url).includes('siteverify')) return {ok:true,json:async()=>({success:!invalidChallenge,hostname:'example.com','error-codes':captchaErrorCode?[captchaErrorCode]:[]})};
     throw new Error(`Unexpected network call: ${url}`);
@@ -24,6 +27,14 @@ async function request(body=valid(), method='POST') {
 test('valid enquiry sends email with page and section', async () => {
   const response = await request(); assert.equal(response.code,200); assert.equal(sent.length,1);
   assert.match(sent[0].text,/Tour itinerary/); assert.equal(sent[0].replyTo,'jane@example.com');
+});
+test('Indian Moments mailbox uses Rediffmail Pro instead of Gmail SMTP', async () => {
+  process.env.SMTP_USER = 'tarun@indianmoments.com';
+  const response = await request();
+  assert.equal(response.code, 200);
+  assert.equal(transportOptions.host, 'smtp.rediffmailpro.com');
+  assert.equal(transportOptions.port, 587);
+  assert.equal(transportOptions.auth.user, 'tarun@indianmoments.com');
 });
 test('temporary CAPTCHA bypass sends without a token or verification request', async () => {
   process.env.CAPTCHA_ENABLED = 'false';

@@ -55,8 +55,13 @@ module.exports = async (req, res) => {
     const text = Object.entries(details).map(([key,value]) => `${key}: ${value}`).join('\n');
     const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#321e16"><h1 style="color:#820000">New Pushkar enquiry</h1>${Object.entries(details).map(([key,value]) => `<p><strong>${safe(key)}:</strong><br>${safe(value).replace(/\n/g,'<br>')}</p>`).join('')}</div>`;
     try {
-      const transport = nodemailer.createTransport({host: process.env.SMTP_HOST || 'smtp.gmail.com', port: Number(process.env.SMTP_PORT || 587), secure: false, auth: {user: process.env.SMTP_USER, pass: process.env.SMTP_PASS}, connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000});
-      await transport.sendMail({from: process.env.SMTP_USER, to: process.env.RECEIVER_EMAIL, replyTo: email, subject: 'Pushkar Camel Fair enquiry', text, html, disableFileAccess: true, disableUrlAccess: true});
+      const smtpUser = process.env.SMTP_USER.trim();
+      const indianMomentsMailbox = /@indianmoments\.com$/i.test(smtpUser);
+      const host = indianMomentsMailbox && (!process.env.SMTP_HOST || process.env.SMTP_HOST === 'smtp.gmail.com')
+        ? 'smtp.rediffmailpro.com' : process.env.SMTP_HOST || 'smtp.gmail.com';
+      const port = Number(host === 'smtp.rediffmailpro.com' ? 587 : process.env.SMTP_PORT || 587);
+      const transport = nodemailer.createTransport({host, port, secure: port === 465, auth: {user: smtpUser, pass: process.env.SMTP_PASS}, connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000});
+      await transport.sendMail({from: smtpUser, to: process.env.RECEIVER_EMAIL, replyTo: email, subject: 'Pushkar Camel Fair enquiry', text, html, disableFileAccess: true, disableUrlAccess: true});
     } catch (error) {
       console.error('Enquiry SMTP delivery failed:', error.code || 'unknown');
       const message = error.code === 'EAUTH' || error.responseCode === 535
