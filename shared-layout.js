@@ -23,7 +23,7 @@
     script.src = '/script.js?v=20261030-24';
     script.onload = () => {
       const enquiryScript = document.createElement('script');
-      enquiryScript.src = '/enquiry-ui.js?v=20261030-24';
+      enquiryScript.src = '/enquiry-ui.js?v=20261030-25';
       document.body.append(enquiryScript);
     };
     document.body.append(script);

@@ -42,7 +42,10 @@ module.exports = async (req, res) => {
       await transport.sendMail({from: process.env.SMTP_USER, to: process.env.RECEIVER_EMAIL, replyTo: email, subject: 'Pushkar Camel Fair enquiry', text, html, disableFileAccess: true, disableUrlAccess: true});
     } catch (error) {
       console.error('Enquiry SMTP delivery failed:', error.code || 'unknown');
-      return res.status(502).json({error: 'Email could not be sent. Please try again shortly.'});
+      const message = error.code === 'EAUTH' || error.responseCode === 535
+        ? 'Email setup needs attention. Please contact us directly while we fix it.'
+        : 'Email could not be sent. Please try again shortly.';
+      return res.status(502).json({error: message});
     }
     return res.status(200).json({ok: true});
   } catch (error) {

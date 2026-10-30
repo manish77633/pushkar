@@ -61,8 +61,10 @@
       success.addEventListener('close', () => success.remove());
       success.showModal();
     } catch (error) {
-      status.textContent = error.message;
+      status.textContent = `${error.message} Complete the CAPTCHA again before retrying.`;
       if (widgetId !== null) window.grecaptcha.reset(widgetId);
+      status.setAttribute('tabindex', '-1');
+      status.focus();
     } finally { submit.disabled = false; submit.textContent = 'Send enquiry'; }
   });
 })();
