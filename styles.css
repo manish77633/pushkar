@@ -1318,8 +1318,6 @@ a:focus-visible {
   .pill-button.small {
     font-size: 25px;
     padding: 6px 16px;
-  }
-  .pill-button.small[href^="/contact-us"] {
     display: flex;
     width: max-content;
     max-width: 100%;
