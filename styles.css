@@ -939,7 +939,7 @@ footer#contact p {
   isolation: isolate;
   color: #000000;
   text-decoration: none;
-  padding: 36px 40px 44px;
+  padding: 55px 60px 50px;
   min-height: 185px;
 }
 
@@ -1258,7 +1258,7 @@ a:focus-visible {
     padding-inline: 14px;
   }
   .tagline {
-    font-size: clamp(20px, 5.7vw, 28px);
+    font-size: clamp(20px, 6.3vw, 31px);
     line-height: 1;
     white-space: nowrap;
     transform: translateY(27px);
