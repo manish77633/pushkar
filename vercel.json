@@ -6,7 +6,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'self'"
+          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://www.google.com/recaptcha/; form-action 'self'"
         },
         {
           "key": "X-Content-Type-Options",
@@ -103,13 +103,14 @@
     {
       "source": "/tours/pushkar-fair-and-dev-diwali/",
       "destination": "/pushkar-dev-diwali.html"
-    },
-    {
-      "source": "/enquiry",
-      "destination": "/enquiry.html"
     }
   ],
   "redirects": [
+    {
+      "source": "/enquiry",
+      "destination": "/contact-us",
+      "permanent": false
+    },
     {
       "source": "/",
       "destination": "/pushkar-fair",

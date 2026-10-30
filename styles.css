@@ -29,7 +29,7 @@ body {
   min-height: 100vh;
   margin: auto;
   background: var(--wine);
-  padding: 0 45px 30px;
+  padding: 0 45px;
 }
 
 .site-header {
@@ -145,11 +145,14 @@ body {
   text-underline-offset: 4px;
 }
 
+.hero {
+  aspect-ratio: 1071 / 520;
+}
+
 .hero img {
   display: block;
   width: 100%;
-  height: auto;
-  max-height: 550px;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -157,7 +160,7 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 350px;
   gap: 48px;
-  padding: 50px 10px 70px;
+  padding: 50px 10px 20px;
 }
 
 main {
@@ -165,7 +168,22 @@ main {
 }
 
 .page-heading {
-  margin-bottom: 32px;
+  margin-bottom: 50px;
+}
+
+.xd-tour-page > .page-heading,
+.xd-glimpses-page > .page-heading,
+.xd-haveli-page > .page-heading,
+.xd-dev-page > .page-heading {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.xd-tour-page > .page-heading h1,
+.xd-glimpses-page > .page-heading h1,
+.xd-haveli-page > .page-heading h1,
+.xd-dev-page > .page-heading h1 {
+  font-size: clamp(32px, 3.5vw, 44px);
 }
 
 .page-heading h1,
@@ -200,8 +218,12 @@ main h2 {
   margin: 0 0 20px;
 }
 
-main section {
-  margin-bottom: 54px;
+main > section {
+  margin-block: 48px;
+}
+
+main > section > h2 {
+  padding-block: 20px;
 }
 
 main p {
@@ -303,6 +325,13 @@ main .intro-section p {
   margin-bottom: 22px;
 }
 
+[data-page-route="local-people-and-communities"] .feature-photo,
+[data-page-route="culture-and-communities"] .feature-photo {
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+
 .final-section h2 {
   max-width: 650px;
 }
@@ -314,15 +343,15 @@ main .intro-section p {
 
 .schedule-day {
   display: grid;
-  grid-template-columns: 205px 1fr;
-  gap: 20px;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 12px;
   margin-bottom: 28px;
   align-items: start;
 }
 
 .schedule-day h3 {
   color: #ffffff;
-  font: 400 18px/1.6 'Lato', sans-serif;
+  font: 400 17px/1.6 'Lato', sans-serif;
   margin: 0;
   display: flex;
   align-items: center;
@@ -346,14 +375,14 @@ main .intro-section p {
 
 .schedule-day p {
   margin: 0;
-  font: 400 18px/1.6 'Lato', sans-serif;
+  font: 400 17px/1.6 'Lato', sans-serif;
   color: #ffffff;
 }
 
 /* Sidebar Styling matching Images 2 & 3 */
 .sidebar {
   border-left: 1px solid #f2d7c1;
-  padding-left: 32px;
+  padding-left: 44px;
   align-self: start;
   position: sticky;
   top: 135px;
@@ -403,7 +432,7 @@ main .intro-section p {
 
 .sidebar nav {
   display: grid;
-  gap: 17px;
+  gap: 8px;
 }
 
 .sidebar nav a {
@@ -461,13 +490,18 @@ main .intro-section p {
   margin: 0;
 }
 
+.sidebar .tour-entry p a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .tours-block {
   border-bottom: 0;
 }
 
 footer#contact {
   border-top: 1px solid #e2b8a0;
-  padding: 14px 40px 100px;
+  padding: 20px 40px;
   color: var(--footer-cream);
   text-align: center;
 }
@@ -481,6 +515,7 @@ footer#contact p {
 .dev-diwali-card {
   position: relative;
   display: block;
+  width: min(210px, 100%);
   border-radius: 8px;
   overflow: hidden;
   text-decoration: none;
@@ -489,15 +524,15 @@ footer#contact p {
 
 .dev-diwali-card img {
   width: 100%;
-  height: 270px;
+  height: auto;
   object-fit: cover;
   display: block;
   filter: none;
-  transition: transform 0.3s ease;
 }
 
-.dev-diwali-card:hover img {
-  transform: scale(1.03);
+.sidebar .dev-diwali-dates {
+  margin-top: 10px;
+  font-size: 16px;
 }
 
 .dev-diwali-card .card-overlay {
@@ -622,6 +657,24 @@ footer#contact p {
   max-width: 700px;
 }
 
+.honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.recaptcha-slot { margin-top: 20px; min-height: 78px; }
+.form-actions button:disabled { opacity: .6; cursor: wait; }
+
+.form-human-check {
+  display: grid;
+  gap: 8px;
+  max-width: 210px;
+  margin: 24px auto 0;
+  color: #ff9a34;
+  font: 400 18px/1.2 'Lato', sans-serif;
+  text-align: center;
+}
+
+.form-human-check input {
+  text-align: center;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -651,6 +704,12 @@ footer#contact p {
   font: 400 18px 'Lato', sans-serif;
 }
 
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #957d70;
+  opacity: 1;
+}
+
 .contact-form textarea {
   resize: vertical;
 }
@@ -663,7 +722,7 @@ footer#contact p {
 
 .form-actions {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   gap: 16px;
   margin: 26px 0;
 }
@@ -691,6 +750,70 @@ footer#contact p {
   color: var(--cream);
 }
 
+.email-draft-dialog {
+  width: min(540px, calc(100% - 28px));
+  min-height: 390px;
+  border: 0;
+  border-radius: 22px;
+  background: #820000;
+  color: #fff;
+  padding: 56px 60px;
+  box-shadow: 0 12px 35px rgba(35, 0, 0, .25);
+}
+
+.email-draft-dialog[open] {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.email-draft-dialog::backdrop {
+  background: rgba(48, 0, 0, .7);
+}
+
+.email-draft-dialog h2 {
+  color: #fff;
+  font-size: 23px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-bottom: 16px;
+}
+
+.email-draft-dialog p {
+  color: #f5d6d0;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.email-draft-dialog a {
+  color: #ffc079;
+}
+
+.email-draft-dialog .future-site-name {
+  color: #f5d6d0;
+}
+
+.email-draft-close {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  border: 0;
+  background: none;
+  color: #fff;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .email-draft-dialog {
+    min-height: 320px;
+    padding: 48px 30px;
+  }
+}
+
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -715,20 +838,34 @@ footer#contact p {
 .travel-cards {
   display: grid;
   gap: 24px;
-  margin: 36px 0 60px;
+  width: 85%;
+  margin: 36px 0 60px -30px;
 }
 
 .travel-card {
+  display: block;
+  position: relative;
+  isolation: isolate;
   color: #000000;
-  background: transparent url('/assets/old-paper-label.png') center/100% 100% no-repeat;
-  padding: 40px 78px 50px;
+  text-decoration: none;
+  padding: 36px 40px 44px;
   min-height: 185px;
+}
+
+.travel-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: transparent url('/assets/old-paper-label.png') center/100% 100% no-repeat;
+  transform: scaleX(-1);
 }
 
 .travel-card-head {
   display: flex;
   align-items: flex-start;
   gap: 16px;
+  min-height: 70px;
   margin-bottom: 10px;
 }
 
@@ -756,16 +893,6 @@ footer#contact p {
   margin: 0;
 }
 
-.travel-card p a,
-.travel-card p a:visited {
-  color: #29231e;
-  text-decoration: none;
-}
-
-.travel-card p a:hover {
-  text-decoration: underline;
-}
-
 .future-dates {
   margin-top: 50px;
 }
@@ -773,7 +900,7 @@ footer#contact p {
 .future-dates h3 {
   font: 600 18px/1.3 'Lato', sans-serif;
   text-transform: uppercase;
-  color: #ff9a34;
+  color: #ffffff;
   margin-bottom: 20px;
 }
 
@@ -783,40 +910,68 @@ footer#contact p {
 }
 
 /* Journey Cards */
+.xd-tour-page a,
+.xd-tour-page a:hover,
+.xd-tour-page a:visited {
+  text-decoration: none;
+}
+
+.xd-tour-page a[href*="tripadvisor.in"],
+.xd-tour-page a[href*="tripadvisor.in"]:visited {
+  color: #ff9a34;
+}
+
 .journey-card {
   display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 18px;
-  margin: 0 0 36px;
+  position: relative;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 14px;
+  margin: 0 0 42px;
   align-items: start;
 }
 
 .journey-card img {
   display: block;
-  width: 140px;
+  width: 120px;
   height: 150px;
   object-fit: cover;
   border-radius: 4px;
 }
 
 .journey-card h3 {
-  font: 400 20px/1.25 'Lato', sans-serif;
+  font: 400 18px/1.25 'Lato', sans-serif;
   text-transform: uppercase;
-  color: #ffffff;
+  color: #f4d7d0;
   margin: 0 0 4px;
+}
+
+.journey-card h3 a,
+.journey-card h3 a:visited {
+  color: inherit;
+}
+
+.journey-card h3 a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
 }
 
 .journey-card small {
   display: block;
-  color: #ff9a34;
-  font: 700 16px/1.3 'Lato', sans-serif;
+  color: #d9a39e;
+  font: 700 15px/1.3 'Lato', sans-serif;
   margin-bottom: 5px;
 }
 
 .journey-card p {
-  font: 400 18px/1.55 'Lato', sans-serif;
-  color: #ffffff;
+  font: 400 16px/1.45 'Lato', sans-serif;
+  color: #dfc0ba;
   margin: 0;
+}
+
+.journey-card p a,
+.journey-card p a:visited {
+  color: #ffb34f;
 }
 
 /* Read more - ONLY on mobile (<600px), NEVER on desktop */
@@ -949,7 +1104,7 @@ a:focus-visible {
 /* Responsive adjustments */
 @media (max-width: 900px) {
   .site-shell {
-    padding: 0 20px 24px;
+    padding: 0 20px;
   }
   .site-header {
     margin-inline: -20px;
@@ -961,7 +1116,7 @@ a:focus-visible {
   .content-grid {
     grid-template-columns: 1fr;
     gap: 36px;
-    padding: 36px 8px 50px;
+    padding: 36px 8px 20px;
   }
   .sidebar {
     border-left: 0;
@@ -984,16 +1139,18 @@ a:focus-visible {
 }
 
 @media (max-width: 600px) {
+  main > section {
+    margin-block: 36px;
+  }
+  main > section > h2 {
+    padding-block: 16px;
+  }
   html, body {
     width: 100%;
     overflow-x: clip;
   }
   .site-shell {
-    padding: 0 14px 20px;
-  }
-  [data-page-route="pushkar-fair-photo-gallery"] .hero img {
-    height: calc(51.45vw - 14px);
-    object-fit: cover;
+    padding: 0 14px;
   }
   .site-header {
     height: 75px;
@@ -1037,7 +1194,10 @@ a:focus-visible {
     font-size: 18px;
   }
   .schedule-day h3 {
-    font-size: 18px;
+    font-size: 17px;
+  }
+  .schedule-day p {
+    font-size: 17px;
   }
   .sidebar nav a {
     font-size: 20px;
@@ -1078,11 +1238,13 @@ a:focus-visible {
     padding: 52px 44px 48px;
   }
   .travel-cards {
+    width: 100%;
     gap: 0;
+    margin-left: 0;
   }
   .travel-card-head {
     gap: 12px;
-    align-items: center;
+    align-items: flex-start;
   }
   .travel-card small {
     font-size: 14px;

@@ -1,5 +1,6 @@
 tmp/
 .env*
+!.env.example
 .vercel/
 node_modules/
 .DS_Store

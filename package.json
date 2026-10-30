@@ -1,0 +1,23 @@
+{
+  "name": "pushkar-camelfair",
+  "version": "1.0.0",
+  "main": "script.js",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manish77633/pushkar.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manish77633/pushkar/issues"
+  },
+  "homepage": "https://github.com/manish77633/pushkar#readme",
+  "description": "",
+  "dependencies": {
+    "nodemailer": "^10.3.1"
+  }
+}

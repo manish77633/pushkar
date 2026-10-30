@@ -20,7 +20,12 @@
 
     // Initialize page controls after the shared markup exists.
     const script = document.createElement('script');
-    script.src = '/script.js?v=20261030-21';
+    script.src = '/script.js?v=20261030-24';
+    script.onload = () => {
+      const enquiryScript = document.createElement('script');
+      enquiryScript.src = '/enquiry-ui.js?v=20261030-24';
+      document.body.append(enquiryScript);
+    };
     document.body.append(script);
   } catch (error) {
     console.error('Could not load shared site layout:', error);

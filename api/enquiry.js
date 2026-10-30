@@ -1,0 +1,52 @@
+const nodemailer = require('nodemailer');
+
+const clean = (value, max) => typeof value === 'string' ? value.trim().slice(0, max + 1) : '';
+const safe = value => value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+module.exports = async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store');
+  if (req.method !== 'POST') return res.status(405).json({error: 'Method not allowed'});
+  const configured = ['SMTP_USER','SMTP_PASS','RECEIVER_EMAIL','RECAPTCHA_SECRET_KEY'].every(key => process.env[key]);
+  if (!configured) return res.status(503).json({error: 'Enquiries are temporarily unavailable. Please try again later.'});
+  const origin = req.headers.origin;
+  if (origin) {
+    try {
+      if (new URL(origin).host !== req.headers.host) return res.status(403).json({error: 'Request not allowed.'});
+    } catch { return res.status(403).json({error: 'Request not allowed.'}); }
+  }
+  if (!/^application\/json(?:\s*;|$)/i.test(req.headers['content-type'] || '')) return res.status(415).json({error: 'JSON required.'});
+  if (Number(req.headers['content-length'] || 0) > 12000) return res.status(413).json({error: 'Enquiry is too large.'});
+  const body = req.body;
+  if (!body || typeof body !== 'object' || Array.isArray(body) || Buffer.byteLength(JSON.stringify(body)) > 12000) return res.status(400).json({error: 'Invalid enquiry.'});
+  if (body.website) return res.status(400).json({error: 'Invalid enquiry.'});
+  const name = clean(body.name, 80), country = clean(body.country, 80), email = clean(body.email, 254), mobile = clean(body.mobile, 20);
+  const travelDate = clean(body.travelDate, 10), travellers = clean(body.travellers, 2), message = clean(body.message, 1000);
+  const sourcePage = clean(body.sourcePage, 120), sourceSection = clean(body.sourceSection, 120), pageUrl = clean(body.pageUrl, 500);
+  if (!/^[\p{L} .'-]{2,80}$/u.test(name) || !/^[\p{L} .'-]{2,80}$/u.test(country) || !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email) || !/^[6-9]\d{9}$/.test(mobile) || /^(\d)\1{9}$/.test(mobile) || message.length < 10 || message.length > 1000 || /[\r\n]/.test(sourcePage + sourceSection)) return res.status(400).json({error: 'Please check the form details.'});
+  if (travelDate && (!/^\d{4}-\d{2}-\d{2}$/.test(travelDate) || Number.isNaN(Date.parse(travelDate)) || travelDate < new Date().toISOString().slice(0,10))) return res.status(400).json({error: 'Please choose a valid future travel date.'});
+  if (travellers && (!/^\d{1,2}$/.test(travellers) || +travellers < 1 || +travellers > 50)) return res.status(400).json({error: 'Please enter 1 to 50 travellers.'});
+  const issuedAt = Number(body.issuedAt);
+  if (!Number.isFinite(issuedAt) || Date.now() - issuedAt < 2000 || Date.now() - issuedAt > 3600000) return res.status(400).json({error: 'Please reopen the form and try again.'});
+  if (!body.recaptchaToken || typeof body.recaptchaToken !== 'string' || body.recaptchaToken.length > 2048) return res.status(400).json({error: 'Please complete the security check.'});
+  try {
+    const verification = await fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      body: new URLSearchParams({secret: process.env.RECAPTCHA_SECRET_KEY, response: body.recaptchaToken})
+    });
+    const challenge = verification.ok ? await verification.json() : null;
+    if (!challenge?.success || (challenge.hostname && challenge.hostname !== req.headers.host?.split(':')[0])) return res.status(400).json({error: 'Security check failed. Please try again.'});
+    const details = {Name:name, Country:country, Email:email, Mobile:mobile, 'Travel date':travelDate || 'Not provided', Travellers:travellers || 'Not provided', Page:sourcePage || 'Unknown', Section:sourceSection || 'General enquiry', URL:pageUrl || 'Not provided', Message:message};
+    const text = Object.entries(details).map(([key,value]) => `${key}: ${value}`).join('\n');
+    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#321e16"><h1 style="color:#820000">New Pushkar enquiry</h1>${Object.entries(details).map(([key,value]) => `<p><strong>${safe(key)}:</strong><br>${safe(value).replace(/\n/g,'<br>')}</p>`).join('')}</div>`;
+    try {
+      const transport = nodemailer.createTransport({host: process.env.SMTP_HOST || 'smtp.gmail.com', port: Number(process.env.SMTP_PORT || 587), secure: false, auth: {user: process.env.SMTP_USER, pass: process.env.SMTP_PASS}, connectionTimeout: 10000, greetingTimeout: 10000, socketTimeout: 15000});
+      await transport.sendMail({from: process.env.SMTP_USER, to: process.env.RECEIVER_EMAIL, replyTo: email, subject: 'Pushkar Camel Fair enquiry', text, html, disableFileAccess: true, disableUrlAccess: true});
+    } catch (error) {
+      console.error('Enquiry SMTP delivery failed:', error.code || 'unknown');
+      return res.status(502).json({error: 'Email could not be sent. Please try again shortly.'});
+    }
+    return res.status(200).json({ok: true});
+  } catch (error) {
+    console.error('Enquiry service failed:', error.message);
+    return res.status(503).json({error: 'Enquiries are temporarily unavailable. Please try again later.'});
+  }
+};
