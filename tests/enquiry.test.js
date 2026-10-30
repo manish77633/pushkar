@@ -27,6 +27,16 @@ async function request(body=valid(), method='POST') {
 test('valid enquiry sends email with page and section', async () => {
   const response = await request(); assert.equal(response.code,200); assert.equal(sent.length,1);
   assert.match(sent[0].text,/Tour itinerary/); assert.equal(sent[0].replyTo,'jane@example.com');
+  assert.match(sent[0].html, /Guest details/);
+  assert.match(sent[0].html, /Journey details/);
+  assert.match(sent[0].html, /<th scope="row"[^>]*>Name<\/th>\s*<td[^>]*>Jane Doe<\/td>/);
+  assert.match(sent[0].html, /Open source page/);
+});
+test('HTML email escapes enquiry content', async () => {
+  const response = await request({...valid(), message:'Please include <script>alert(1)</script> in our plans.'});
+  assert.equal(response.code, 200);
+  assert.match(sent[0].html, /&lt;script&gt;alert\(1\)&lt;\/script&gt;/);
+  assert.doesNotMatch(sent[0].html, /<script>/);
 });
 test('Indian Moments mailbox uses Rediffmail Pro instead of Gmail SMTP', async () => {
   process.env.SMTP_USER = 'tarun@indianmoments.com';

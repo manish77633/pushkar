@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
+const renderEnquiryEmail = require('./enquiry-email');
 
 const clean = (value, max) => typeof value === 'string' ? value.trim().slice(0, max + 1) : '';
-const safe = value => value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') return res.status(405).json({error: 'Method not allowed'});
@@ -53,7 +53,7 @@ module.exports = async (req, res) => {
     }
     const details = {Name:name, Country:country, Email:email, Mobile:mobile, 'Travel date':travelDate || 'Not provided', Travellers:travellers || 'Not provided', Page:sourcePage || 'Unknown', Section:sourceSection || 'General enquiry', URL:pageUrl || 'Not provided', Message:message};
     const text = Object.entries(details).map(([key,value]) => `${key}: ${value}`).join('\n');
-    const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#321e16"><h1 style="color:#820000">New Pushkar enquiry</h1>${Object.entries(details).map(([key,value]) => `<p><strong>${safe(key)}:</strong><br>${safe(value).replace(/\n/g,'<br>')}</p>`).join('')}</div>`;
+    const html = renderEnquiryEmail(details, req.headers.host);
     try {
       const smtpUser = process.env.SMTP_USER.trim();
       const indianMomentsMailbox = /@indianmoments\.com$/i.test(smtpUser);
