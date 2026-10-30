@@ -69,6 +69,8 @@
       const result = await response.json();
       if (!response.ok || !result.ok) throw new Error(result.error || 'Could not send your enquiry. Please try again.');
       form.reset();
+      issuedAt = Date.now();
+      if (captchaEnabled && widgetId !== null) window.grecaptcha.reset(widgetId);
       const success = document.createElement('dialog');
       success.className = 'email-draft-dialog';
       success.innerHTML = '<button type="button" class="email-draft-close" aria-label="Close message">×</button><h2>Thank you for your enquiry!</h2><p>Your enquiry has been sent successfully. We will get back to you soon.</p>';
