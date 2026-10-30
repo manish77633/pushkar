@@ -8,7 +8,7 @@
 
   try {
     const markup = await Promise.all(parts.map(async ([, url]) => {
-      const response = await fetch(url);
+      const response = await fetch(`${url}?v=20261030-15`, {cache: 'no-store'});
       if (!response.ok) throw new Error(`${url}: ${response.status}`);
       return response.text();
     }));
@@ -20,7 +20,7 @@
 
     // Initialize page controls after the shared markup exists.
     const script = document.createElement('script');
-    script.src = '/script.js';
+    script.src = '/script.js?v=20261030-15';
     document.body.append(script);
   } catch (error) {
     console.error('Could not load shared site layout:', error);

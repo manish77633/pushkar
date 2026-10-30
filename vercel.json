@@ -33,7 +33,15 @@
       "destination": "/programme.html"
     },
     {
+      "source": "/programme",
+      "destination": "/programme.html"
+    },
+    {
       "source": "/photography",
+      "destination": "/photography.html"
+    },
+    {
+      "source": "/photography-tips",
       "destination": "/photography.html"
     },
     {
@@ -41,7 +49,15 @@
       "destination": "/culture-and-communities.html"
     },
     {
+      "source": "/culture-and-communities",
+      "destination": "/culture-and-communities.html"
+    },
+    {
       "source": "/pushkar-tours",
+      "destination": "/luxury-tours.html"
+    },
+    {
+      "source": "/luxury-tours",
       "destination": "/luxury-tours.html"
     },
     {
@@ -57,11 +73,35 @@
       "destination": "/glimpses-of-india.html"
     },
     {
+      "source": "/tours/glimpses-of-india",
+      "destination": "/glimpses-of-india.html"
+    },
+    {
+      "source": "/tours/glimpses-of-india/",
+      "destination": "/glimpses-of-india.html"
+    },
+    {
       "source": "/haveli-diwali-and-pushkar-fair",
       "destination": "/haveli-diwali.html"
     },
     {
+      "source": "/tours/haveli-diwali-pushkar-fair",
+      "destination": "/haveli-diwali.html"
+    },
+    {
+      "source": "/tours/haveli-diwali-pushkar-fair/",
+      "destination": "/haveli-diwali.html"
+    },
+    {
       "source": "/pushkar-fair-and-dev-diwali",
+      "destination": "/pushkar-dev-diwali.html"
+    },
+    {
+      "source": "/tours/pushkar-fair-and-dev-diwali",
+      "destination": "/pushkar-dev-diwali.html"
+    },
+    {
+      "source": "/tours/pushkar-fair-and-dev-diwali/",
       "destination": "/pushkar-dev-diwali.html"
     },
     {

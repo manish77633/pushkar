@@ -1,13 +1,13 @@
 {
-  "index.html": "pushkar-fair",
-  "programme.html": "pushkar-fair-dates-2026",
-  "photography.html": "photography",
-  "culture-and-communities.html": "local-people-and-communities",
-  "luxury-tours.html": "pushkar-tours",
-  "gallery.html": "pushkar-fair-photo-gallery",
-  "contact.html": "contact-us",
-  "glimpses-of-india.html": "glimpses-of-india",
-  "haveli-diwali.html": "haveli-diwali-and-pushkar-fair",
-  "pushkar-dev-diwali.html": "pushkar-fair-and-dev-diwali",
-  "enquiry.html": "enquiry"
+  "index.html": ["pushkar-fair"],
+  "programme.html": ["pushkar-fair-dates-2026", "programme"],
+  "photography.html": ["photography", "photography-tips"],
+  "culture-and-communities.html": ["local-people-and-communities", "culture-and-communities"],
+  "luxury-tours.html": ["pushkar-tours", "luxury-tours"],
+  "gallery.html": ["pushkar-fair-photo-gallery"],
+  "contact.html": ["contact-us"],
+  "glimpses-of-india.html": ["glimpses-of-india", "tours/glimpses-of-india"],
+  "haveli-diwali.html": ["haveli-diwali-and-pushkar-fair", "tours/haveli-diwali-pushkar-fair"],
+  "pushkar-dev-diwali.html": ["pushkar-fair-and-dev-diwali", "tours/pushkar-fair-and-dev-diwali"],
+  "enquiry.html": ["enquiry"]
 }

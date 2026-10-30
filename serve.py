@@ -8,10 +8,22 @@ from urllib.parse import urlsplit
 
 
 ROOT = Path(__file__).resolve().parent
-ROUTES = {f"/{slug}": f"/{filename}" for filename, slug in json.loads((ROOT / "routes.json").read_text()).items()}
+raw_routes = json.loads((ROOT / "routes.json").read_text())
+ROUTES = {}
+for filename, slugs in raw_routes.items():
+    if isinstance(slugs, list):
+        for s in slugs:
+            ROUTES[f"/{s.strip('/')}"] = f"/{filename}"
+    else:
+        ROUTES[f"/{slugs.strip('/')}"] = f"/{filename}"
+
 
 
 class SiteHandler(SimpleHTTPRequestHandler):
+    def end_headers(self):
+        self.send_header("Cache-Control", "no-store, max-age=0")
+        super().end_headers()
+
     def do_GET(self):
         self.serve_route()
 
