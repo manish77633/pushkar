@@ -519,10 +519,22 @@ footer#contact p {
 
 /* Tour Itineraries (Paper Texture) */
 .itinerary {
-  background: transparent url('assets/itinerary-paper-transparent.png') center/100% 100% no-repeat;
+  background: none;
+  border-style: solid;
+  border-color: transparent;
+  border-width: 45px 28px 55px;
+  border-image-source: url('/assets/itinerary-paper-transparent.png');
+  border-image-slice: 90 70 fill;
+  border-image-width: 45px 28px 55px;
+  border-image-repeat: stretch;
   color: #41271c;
-  padding: 55px 65px 65px;
+  padding: 0 35px;
   margin-top: 15px;
+}
+
+.itinerary p,
+.itinerary .tour-paper-note {
+  color: #3b2a20;
 }
 
 .itinerary h2 {
@@ -961,6 +973,10 @@ a:focus-visible {
   .site-shell {
     padding: 0 14px 20px;
   }
+  [data-page-route="pushkar-fair-photo-gallery"] .hero img {
+    height: calc(51.45vw - 14px);
+    object-fit: cover;
+  }
   .site-header {
     height: 75px;
   }
@@ -976,6 +992,16 @@ a:focus-visible {
   }
   .mobile-menu {
     width: min(320px, calc(100vw - 28px));
+  }
+  .form-actions {
+    gap: 8px;
+  }
+  .form-actions button {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 10px 6px;
+    font-size: clamp(11px, 3.2vw, 14px);
+    white-space: nowrap;
   }
   .page-heading h1 {
     font-size: 30px;
@@ -1053,7 +1079,18 @@ a:focus-visible {
     height: 54px;
   }
   .itinerary {
-    padding: 40px 24px 45px;
+    border-width: 36px 18px 42px;
+    border-image-width: 36px 18px 42px;
+    padding: 0 14px;
+  }
+  .itinerary h2 {
+    font-size: 22px;
+  }
+  .itinerary h3 {
+    font-size: 20px;
+  }
+  .itinerary article p {
+    font-size: 16px;
   }
   .schedule-day {
     grid-template-columns: 1fr;
