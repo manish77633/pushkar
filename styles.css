@@ -1326,14 +1326,11 @@ a:focus-visible {
     margin-left: auto;
   }
   footer#contact p {
-    font-size: 14px;
+    font-size: 12px;
     color: #ffe7ba;
   }
   footer#contact {
     padding: 18px 8px;
-  }
-  footer#contact p span {
-    display: block;
   }
   .pill-button:not(.small) {
     width: 100%;
