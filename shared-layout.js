@@ -8,7 +8,7 @@
 
   try {
     const markup = await Promise.all(parts.map(async ([, url]) => {
-      const response = await fetch(`${url}?v=20261030-21`, {cache: 'no-store'});
+      const response = await fetch(`${url}?v=20261030-22`, {cache: 'no-store'});
       if (!response.ok) throw new Error(`${url}: ${response.status}`);
       return response.text();
     }));

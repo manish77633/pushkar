@@ -929,8 +929,8 @@ footer#contact p {
 .travel-cards {
   display: grid;
   gap: 24px;
-  width: 85%;
-  margin: 36px 0 60px -30px;
+  width: 100%;
+  margin: 36px 0 60px;
 }
 
 .travel-card {
@@ -961,8 +961,8 @@ footer#contact p {
 }
 
 .travel-card-head img {
-  width: 150px;
-  height: 60px;
+  width: 190px;
+  height: 100px;
   object-fit: cover;
   flex: none;
 }
@@ -976,6 +976,10 @@ footer#contact p {
   font: 400 24px/1.25 'Source Sans 3', sans-serif;
   margin: 3px 0 0;
   color: #000000;
+}
+
+@media (min-width: 1100px) {
+  .travel-card h3 { white-space: nowrap; }
 }
 
 .travel-card p {
@@ -1316,8 +1320,14 @@ a:focus-visible {
     padding: 6px 16px;
   }
   footer#contact p {
-    font-size: 15px;
+    font-size: 14px;
     color: #ffe7ba;
+  }
+  footer#contact {
+    padding: 18px 8px;
+  }
+  footer#contact p span {
+    display: block;
   }
   .pill-button:not(.small) {
     width: 100%;
@@ -1331,7 +1341,7 @@ a:focus-visible {
     grid-template-columns: 1fr;
   }
   .travel-card {
-    padding: 38px 44px 62px;
+    padding: 90px 44px 62px;
   }
   .travel-cards {
     width: 100%;
