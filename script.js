@@ -1,5 +1,9 @@
 const menuButton = document.querySelector('.menu-toggle');
 const menu = document.querySelector('#mobile-menu');
+const siteHeader = document.querySelector('.site-header');
+const updateHeader = () => siteHeader.classList.toggle('is-scrolled', window.scrollY > 24);
+window.addEventListener('scroll', updateHeader, {passive: true});
+updateHeader();
 const closeMenu = () => {
   menu.classList.remove('open');
   menuButton.setAttribute('aria-expanded', 'false');
