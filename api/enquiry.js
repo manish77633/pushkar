@@ -21,7 +21,12 @@ module.exports = async (req, res) => {
   const name = clean(body.name, 80), country = clean(body.country, 80), email = clean(body.email, 254), mobile = clean(body.mobile, 20);
   const travelDate = clean(body.travelDate, 10), travellers = clean(body.travellers, 2), message = clean(body.message, 1000);
   const sourcePage = clean(body.sourcePage, 120), sourceSection = clean(body.sourceSection, 120), pageUrl = clean(body.pageUrl, 500);
-  if (!/^[\p{L} .'-]{2,80}$/u.test(name) || !/^[\p{L} .'-]{2,80}$/u.test(country) || !/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email) || !/^[6-9]\d{9}$/.test(mobile) || /^(\d)\1{9}$/.test(mobile) || message.length < 10 || message.length > 1000 || /[\r\n]/.test(sourcePage + sourceSection)) return res.status(400).json({error: 'Please check the form details.'});
+  if (!/^[\p{L} .'-]{2,80}$/u.test(name)) return res.status(400).json({error: 'Please enter a valid name.'});
+  if (!/^[\p{L} .'-]{2,80}$/u.test(country)) return res.status(400).json({error: 'Please enter a valid country.'});
+  if (!/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(email)) return res.status(400).json({error: 'Please enter a valid email address.'});
+  if (!/^[6-9]\d{9}$/.test(mobile) || /^(\d)\1{9}$/.test(mobile)) return res.status(400).json({error: 'Please enter a valid 10-digit Indian mobile number.'});
+  if (message.length < 10 || message.length > 1000) return res.status(400).json({error: 'Please enter a message of 10 to 1000 characters.'});
+  if (/[\r\n]/.test(sourcePage + sourceSection)) return res.status(400).json({error: 'Invalid page details.'});
   if (travelDate && (!/^\d{4}-\d{2}-\d{2}$/.test(travelDate) || Number.isNaN(Date.parse(travelDate)) || travelDate < new Date().toISOString().slice(0,10))) return res.status(400).json({error: 'Please choose a valid future travel date.'});
   if (travellers && (!/^\d{1,2}$/.test(travellers) || +travellers < 1 || +travellers > 50)) return res.status(400).json({error: 'Please enter 1 to 50 travellers.'});
   const issuedAt = Number(body.issuedAt);
@@ -33,7 +38,15 @@ module.exports = async (req, res) => {
       body: new URLSearchParams({secret: process.env.RECAPTCHA_SECRET_KEY, response: body.recaptchaToken})
     });
     const challenge = verification.ok ? await verification.json() : null;
-    if (!challenge?.success || (challenge.hostname && challenge.hostname !== req.headers.host?.split(':')[0])) return res.status(400).json({error: 'Security check failed. Please try again.'});
+    if (!challenge?.success) {
+      const codes = challenge?.['error-codes'] || [];
+      if (codes.includes('invalid-input-secret') || codes.includes('missing-input-secret')) {
+        return res.status(503).json({error: 'CAPTCHA setup needs attention. Please contact us directly while we fix it.'});
+      }
+      if (codes.includes('timeout-or-duplicate')) return res.status(400).json({error: 'CAPTCHA expired. Please complete it again.'});
+      return res.status(400).json({error: 'Security check failed. Please try again.'});
+    }
+    if (challenge.hostname && challenge.hostname !== req.headers.host?.split(':')[0]) return res.status(400).json({error: 'CAPTCHA domain does not match this website.'});
     const details = {Name:name, Country:country, Email:email, Mobile:mobile, 'Travel date':travelDate || 'Not provided', Travellers:travellers || 'Not provided', Page:sourcePage || 'Unknown', Section:sourceSection || 'General enquiry', URL:pageUrl || 'Not provided', Message:message};
     const text = Object.entries(details).map(([key,value]) => `${key}: ${value}`).join('\n');
     const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#321e16"><h1 style="color:#820000">New Pushkar enquiry</h1>${Object.entries(details).map(([key,value]) => `<p><strong>${safe(key)}:</strong><br>${safe(value).replace(/\n/g,'<br>')}</p>`).join('')}</div>`;

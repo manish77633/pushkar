@@ -2,12 +2,27 @@
   const form = document.querySelector('#contact-form');
   if (!form) return;
   form.removeAttribute('data-recipient');
-  form.querySelector('.form-actions').innerHTML = '<button type="submit">Send enquiry</button>';
+  form.querySelector('.form-actions').innerHTML = '<button type="submit">Send enquiry</button><button type="button" class="whatsapp-enquiry">Send on WhatsApp</button>';
   form.querySelector('.form-note')?.remove();
   form.querySelector('.form-actions').insertAdjacentHTML('beforebegin', '<div class="honeypot" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div><div class="recaptcha-slot"></div>');
   form.insertAdjacentHTML('beforeend', '<p class="form-status" role="status" aria-live="polite"></p>');
   const status = form.querySelector('.form-status');
   const submit = form.querySelector('[type="submit"]');
+  form.querySelector('.whatsapp-enquiry').addEventListener('click', () => {
+    if (!form.reportValidity()) return;
+    const data = Object.fromEntries(new FormData(form));
+    const details = [
+      'Pushkar Camel Fair enquiry', '',
+      `Page: ${sourcePage}`, `Section: ${sourceSection}`, `Page URL: ${sourceUrl}`,
+      `Name: ${data.name}`, `Country: ${data.country}`, `Travel date: ${data.travelDate || 'Not provided'}`,
+      `Travellers: ${data.travellers || 'Not provided'}`, `Email: ${data.email}`, `Mobile: ${data.mobile}`,
+      '', 'Message:', data.message
+    ].join('\n');
+    const number = /^\d{10,15}$/.test(form.dataset.whatsappNumber || '') ? form.dataset.whatsappNumber : '';
+    const shareUrl = number ? `https://wa.me/${number}?text=${encodeURIComponent(details)}` : `https://api.whatsapp.com/send?text=${encodeURIComponent(details)}`;
+    window.open(shareUrl, '_blank', 'noopener,noreferrer');
+    status.textContent = 'WhatsApp opened with your enquiry. Choose a contact and press Send there.';
+  });
   const query = new URLSearchParams(location.search);
   let sourcePage = query.get('sourcePage') || query.get('page') || document.title;
   let sourceSection = query.get('sourceSection') || 'General enquiry';
