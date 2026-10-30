@@ -1017,7 +1017,12 @@ a:focus-visible {
     color: #ffe7ba;
   }
   .pill-button:not(.small) {
-    white-space: normal;
+    width: 100%;
+    white-space: nowrap;
+    font-size: clamp(11px, 3.5vw, 14px);
+    letter-spacing: 0;
+    gap: 6px;
+    padding: 9px 10px;
   }
   .gallery-grid, .form-grid {
     grid-template-columns: 1fr;
