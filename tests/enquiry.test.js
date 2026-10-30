@@ -37,6 +37,11 @@ test('CAPTCHA is required when the toggle is unset', async () => {
   assert.equal(response.code, 400);
   assert.equal(sent.length, 0);
 });
+test('long CAPTCHA response reaches verification and sends email', async () => {
+  const response = await request({...valid(), recaptchaToken: 'x'.repeat(4000)});
+  assert.equal(response.code, 200);
+  assert.equal(sent.length, 1);
+});
 test('invalid email and missing fields are rejected', async () => {
   assert.equal((await request({...valid(),email:'wrong'})).code,400);
   assert.equal((await request({...valid(),name:''})).code,400);

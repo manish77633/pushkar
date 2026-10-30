@@ -15,9 +15,9 @@ module.exports = async (req, res) => {
     } catch { return res.status(403).json({error: 'Request not allowed.'}); }
   }
   if (!/^application\/json(?:\s*;|$)/i.test(req.headers['content-type'] || '')) return res.status(415).json({error: 'JSON required.'});
-  if (Number(req.headers['content-length'] || 0) > 12000) return res.status(413).json({error: 'Enquiry is too large.'});
+  if (Number(req.headers['content-length'] || 0) > 20000) return res.status(413).json({error: 'Enquiry is too large.'});
   const body = req.body;
-  if (!body || typeof body !== 'object' || Array.isArray(body) || Buffer.byteLength(JSON.stringify(body)) > 12000) return res.status(400).json({error: 'Invalid enquiry.'});
+  if (!body || typeof body !== 'object' || Array.isArray(body) || Buffer.byteLength(JSON.stringify(body)) > 20000) return res.status(400).json({error: 'Invalid enquiry.'});
   if (body.website) return res.status(400).json({error: 'Invalid enquiry.'});
   const name = clean(body.name, 80), country = clean(body.country, 80), email = clean(body.email, 254), mobile = clean(body.mobile, 20);
   const travelDate = clean(body.travelDate, 10), travellers = clean(body.travellers, 2), message = clean(body.message, 1000);
@@ -32,7 +32,8 @@ module.exports = async (req, res) => {
   if (travellers && (!/^\d{1,2}$/.test(travellers) || +travellers < 1 || +travellers > 50)) return res.status(400).json({error: 'Please enter 1 to 50 travellers.'});
   const issuedAt = Number(body.issuedAt);
   if (!Number.isFinite(issuedAt) || Date.now() - issuedAt < 2000 || Date.now() - issuedAt > 3600000) return res.status(400).json({error: 'Please reopen the form and try again.'});
-  if (captchaEnabled && (!body.recaptchaToken || typeof body.recaptchaToken !== 'string' || body.recaptchaToken.length > 2048)) return res.status(400).json({error: 'Please complete the security check.'});
+  if (captchaEnabled && (!body.recaptchaToken || typeof body.recaptchaToken !== 'string')) return res.status(400).json({error: 'Please complete the security check.'});
+  if (captchaEnabled && body.recaptchaToken.length > 8192) return res.status(400).json({error: 'Security check response is too large. Please try again.'});
   try {
     if (captchaEnabled) {
     const verification = await fetch('https://www.google.com/recaptcha/api/siteverify', {
