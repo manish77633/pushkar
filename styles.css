@@ -301,6 +301,17 @@ main .intro-section p {
   border-radius: 19px;
 }
 
+.link-arrow {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 8px solid currentColor;
+  flex: none;
+  vertical-align: middle;
+}
+
 .map-section figure {
   margin: 0 0 20px;
 }
@@ -704,6 +715,81 @@ footer#contact p {
   font: 400 18px 'Lato', sans-serif;
 }
 
+.contact-form input {
+  min-height: 52px;
+  min-width: 0;
+}
+
+.date-control { display: grid; gap: 6px; min-width: 0; }
+.date-field { position: relative; min-width: 0; }
+.contact-form .date-field input { padding-right: 52px; }
+.date-calendar-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent url('/assets/calendar-icon.svg') center / 22px 22px no-repeat;
+  cursor: pointer;
+}
+.date-calendar-toggle:focus-visible { outline: 2px solid #8a3300; outline-offset: 1px; }
+.date-calendar {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 40;
+  display: grid;
+  gap: 10px;
+  width: min(340px, 100%);
+  padding: 14px;
+  border: 1px solid #c28b67;
+  border-radius: 12px;
+  background: #fff6e8;
+  box-shadow: 0 12px 28px rgba(29, 0, 0, .35);
+  color: #3a1d16;
+  font: 400 15px/1.2 'Lato', sans-serif;
+}
+.date-calendar[hidden] { display: none; }
+.date-calendar-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.date-calendar-month { font-weight: 700; text-align: center; }
+.date-calendar-nav,
+.date-calendar-day {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.date-calendar-nav { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 6px; }
+.date-calendar-nav::before { content: ''; width: 9px; height: 9px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; }
+.date-calendar-previous::before { transform: rotate(135deg); }
+.date-calendar-next::before { transform: rotate(-45deg); }
+.date-calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 2px; text-align: center; }
+.date-calendar-weekday { padding: 7px 0; color: #865d4f; font-size: 12px; }
+.date-calendar-day { min-width: 0; min-height: 36px; padding: 0; border-radius: 6px; }
+.date-calendar-day:hover:not(:disabled),
+.date-calendar-nav:hover:not(:disabled) { background: #f1d7bd; }
+.date-calendar-day[aria-pressed="true"] { background: #820000; color: #fff; }
+.date-calendar-day:disabled,
+.date-calendar-nav:disabled { opacity: .35; cursor: default; }
+.date-calendar-day:focus-visible,
+.date-calendar-nav:focus-visible { outline: 2px solid #8a3300; outline-offset: 1px; }
+
+.contact-form input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+.contact-form input[type="number"]::-webkit-inner-spin-button,
+.contact-form input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .contact-form input::placeholder,
 .contact-form textarea::placeholder {
   color: #957d70;
@@ -898,6 +984,11 @@ footer#contact p {
   margin: 0;
 }
 
+.travel-card-more {
+  display: inline-block;
+  white-space: nowrap;
+}
+
 .future-dates {
   margin-top: 50px;
 }
@@ -1030,7 +1121,7 @@ footer#contact p {
   }
 
   .mobile-section-content {
-    max-height: 140px;
+    max-height: var(--preview-height, 140px);
     overflow: hidden;
     position: relative;
   }
@@ -1163,7 +1254,7 @@ a:focus-visible {
     padding-inline: 14px;
   }
   .tagline {
-    font-size: clamp(18px, 5vw, 23px);
+    font-size: clamp(20px, 5.7vw, 28px);
     line-height: 1;
     white-space: nowrap;
     transform: translateY(27px);
@@ -1240,7 +1331,7 @@ a:focus-visible {
     grid-template-columns: 1fr;
   }
   .travel-card {
-    padding: 52px 44px 48px;
+    padding: 38px 44px 62px;
   }
   .travel-cards {
     width: 100%;
@@ -1248,8 +1339,8 @@ a:focus-visible {
     margin-left: 0;
   }
   .travel-card-head {
-    gap: 12px;
-    align-items: flex-start;
+    display: block;
+    margin-bottom: 12px;
   }
   .travel-card small {
     font-size: 14px;
@@ -1263,8 +1354,16 @@ a:focus-visible {
     line-height: 1.45;
   }
   .travel-card-head img {
-    width: 90px;
-    height: 54px;
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    margin-bottom: 14px;
+  }
+  .journey-card p a {
+    display: inline-block;
+    white-space: nowrap;
   }
   .itinerary {
     border-width: 36px 18px 42px;

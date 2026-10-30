@@ -20,10 +20,10 @@
 
     // Initialize page controls after the shared markup exists.
     const script = document.createElement('script');
-    script.src = '/script.js?v=20261030-24';
+    script.src = '/script.js?v=20261030-25';
     script.onload = () => {
       const enquiryScript = document.createElement('script');
-      enquiryScript.src = '/enquiry-ui.js?v=20261030-28';
+      enquiryScript.src = '/enquiry-ui.js?v=20261030-29';
       document.body.append(enquiryScript);
     };
     document.body.append(script);

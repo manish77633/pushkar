@@ -72,8 +72,8 @@ if (sections.length) {
   updateActiveSection();
 }
 
-// Read More ONLY for mobile screens (<=600px). Desktop ALWAYS displays full copy.
-if (window.innerWidth <= 600) {
+// Keep the mobile disclosures on the home page only.
+if (window.innerWidth <= 600 && document.body.dataset.pageRoute === 'pushkar-fair') {
   document.querySelectorAll('main section').forEach((section, index) => {
     const heading = section.querySelector(':scope > h2');
     const firstContent = heading?.nextElementSibling;
@@ -86,6 +86,18 @@ if (window.innerWidth <= 600) {
     while (heading.nextSibling) content.append(heading.nextSibling);
     section.append(content);
     section.classList.add('mobile-disclosure');
+
+    const previewImage = content.querySelector('img');
+    if (previewImage) {
+      const updatePreviewHeight = () => {
+        const imageEnd = (previewImage.closest('figure') || previewImage).getBoundingClientRect().bottom;
+        const contentTop = content.getBoundingClientRect().top;
+        content.style.setProperty('--preview-height', `${Math.ceil(imageEnd - contentTop + 110)}px`);
+      };
+      if (previewImage.complete) updatePreviewHeight();
+      else previewImage.addEventListener('load', updatePreviewHeight, {once: true});
+      window.addEventListener('resize', updatePreviewHeight);
+    }
 
     const title = heading.textContent.trim();
     const toggle = document.createElement('button');
