@@ -35,13 +35,22 @@
   let recaptchaReady;
   const loadRecaptcha = () => {
     if (window.grecaptcha?.render) return Promise.resolve();
-    if (!recaptchaReady) recaptchaReady = new Promise((resolve, reject) => {
-      window.onRecaptchaLoaded = resolve;
-      const script = document.createElement('script');
-      script.src = 'https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoaded&render=explicit';
-      script.onerror = reject;
-      document.head.append(script);
-    });
+    if (!recaptchaReady) recaptchaReady = (async () => {
+      for (const host of ['www.recaptcha.net', 'www.google.com']) {
+        try {
+          await new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            const timer = setTimeout(() => { script.remove(); reject(new Error('CAPTCHA load timed out')); }, 12000);
+            window.onRecaptchaLoaded = () => { clearTimeout(timer); resolve(); };
+            script.src = `https://${host}/recaptcha/api.js?onload=onRecaptchaLoaded&render=explicit`;
+            script.onerror = () => { clearTimeout(timer); script.remove(); reject(new Error('CAPTCHA script blocked')); };
+            document.head.append(script);
+          });
+          return;
+        } catch { /* Try the alternate Google endpoint. */ }
+      }
+      throw new Error('CAPTCHA could not load');
+    })();
     return recaptchaReady;
   };
   const prepareSecurity = async () => {
@@ -69,6 +78,8 @@
       const result = await response.json();
       if (!response.ok || !result.ok) throw new Error(result.error || 'Could not send your enquiry. Please try again.');
       form.reset();
+      issuedAt = Date.now();
+      if (captchaEnabled && widgetId !== null) window.grecaptcha.reset(widgetId);
       const success = document.createElement('dialog');
       success.className = 'email-draft-dialog';
       success.innerHTML = '<button type="button" class="email-draft-close" aria-label="Close message">×</button><h2>Thank you for your enquiry!</h2><p>Your enquiry has been sent successfully. We will get back to you soon.</p>';

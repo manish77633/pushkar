@@ -7,7 +7,7 @@ for (const key of ['SMTP_USER','SMTP_PASS','RECEIVER_EMAIL','RECAPTCHA_SECRET_KE
 const valid = () => ({name:'Jane Doe',country:'India',email:'jane@example.com',mobile:'9876543210',message:'I would like to visit Pushkar.',issuedAt:Date.now()-10000,recaptchaToken:'valid',sourcePage:'Pushkar Fair',sourceSection:'Tour itinerary',pageUrl:'https://example.com/pushkar-fair',website:''});
 let sent, failMail, invalidChallenge, captchaErrorCode;
 beforeEach(() => {
-  process.env.CAPTCHA_ENABLED = 'false';
+  process.env.CAPTCHA_ENABLED = 'true';
   sent = []; failMail = false; invalidChallenge = false; captchaErrorCode = '';
   nodemailer.createTransport = () => ({sendMail: async data => { if (failMail) throw Object.assign(new Error('SMTP unavailable'), {code:'ECONNECTION'}); sent.push(data); }});
   global.fetch = async (url, options) => {
@@ -26,9 +26,16 @@ test('valid enquiry sends email with page and section', async () => {
   assert.match(sent[0].text,/Tour itinerary/); assert.equal(sent[0].replyTo,'jane@example.com');
 });
 test('temporary CAPTCHA bypass sends without a token or verification request', async () => {
+  process.env.CAPTCHA_ENABLED = 'false';
   const response = await request({...valid(), recaptchaToken: ''});
   assert.equal(response.code, 200);
   assert.equal(sent.length, 1);
+});
+test('CAPTCHA is required when the toggle is unset', async () => {
+  delete process.env.CAPTCHA_ENABLED;
+  const response = await request({...valid(), recaptchaToken: ''});
+  assert.equal(response.code, 400);
+  assert.equal(sent.length, 0);
 });
 test('invalid email and missing fields are rejected', async () => {
   assert.equal((await request({...valid(),email:'wrong'})).code,400);
@@ -37,6 +44,7 @@ test('invalid email and missing fields are rejected', async () => {
 });
 test('reCAPTCHA and honeypot reject spam', async () => {
   process.env.CAPTCHA_ENABLED = 'true';
+  assert.equal((await request({...valid(), recaptchaToken: ''})).code,400);
   invalidChallenge=true; assert.equal((await request()).code,400);
   invalidChallenge=false; assert.equal((await request({...valid(),website:'spam'})).code,400);
 });

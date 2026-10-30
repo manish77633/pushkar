@@ -5,7 +5,7 @@ const safe = value => value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;'
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') return res.status(405).json({error: 'Method not allowed'});
-  const captchaEnabled = process.env.CAPTCHA_ENABLED === 'true';
+  const captchaEnabled = process.env.CAPTCHA_ENABLED !== 'false';
   const configured = ['SMTP_USER','SMTP_PASS','RECEIVER_EMAIL', ...(captchaEnabled ? ['RECAPTCHA_SECRET_KEY'] : [])].every(key => process.env[key]);
   if (!configured) return res.status(503).json({error: 'Enquiries are temporarily unavailable. Please try again later.'});
   const origin = req.headers.origin;
