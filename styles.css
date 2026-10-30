@@ -751,13 +751,14 @@ footer#contact p {
 }
 
 .email-draft-dialog {
-  width: min(540px, calc(100% - 28px));
-  min-height: 390px;
+  width: min(545px, calc(100% - 28px));
+  min-height: 426px;
   border: 0;
   border-radius: 22px;
   background: #820000;
   color: #fff;
-  padding: 56px 60px;
+  font-family: Arial, sans-serif;
+  padding: 56px 74px;
   box-shadow: 0 12px 35px rgba(35, 0, 0, .25);
 }
 
@@ -773,23 +774,27 @@ footer#contact p {
 
 .email-draft-dialog h2 {
   color: #fff;
-  font-size: 23px;
+  font-size: 22px;
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .email-draft-dialog p {
   color: #f5d6d0;
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 13px;
+  line-height: 1.35;
   margin: 0;
 }
 
 .email-draft-dialog a {
   color: #ffc079;
+  text-decoration: none;
 }
+
+.email-draft-dialog a:hover,
+.email-draft-dialog a:focus-visible { text-decoration: underline; }
 
 .email-draft-dialog .future-site-name {
   color: #f5d6d0;

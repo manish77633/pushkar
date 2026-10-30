@@ -82,7 +82,8 @@
       if (captchaEnabled && widgetId !== null) window.grecaptcha.reset(widgetId);
       const success = document.createElement('dialog');
       success.className = 'email-draft-dialog';
-      success.innerHTML = '<button type="button" class="email-draft-close" aria-label="Close message">×</button><h2>Thank you for your enquiry!</h2><p>Your enquiry has been sent successfully. We will get back to you soon.</p>';
+      success.setAttribute('aria-labelledby', 'enquiry-success-title');
+      success.innerHTML = '<button type="button" class="email-draft-close" aria-label="Close message">×</button><h2 id="enquiry-success-title">Thank you for your enquiry!</h2><p>We have received your message and will reply personally within 24 hours with ideas and details for your journey. In the meantime, you are welcome to explore our <a href="/luxury-tours">luxury tours</a> or check our main website <a href="https://www.indianmoments.com" target="_blank" rel="noopener noreferrer">www.indianmoments.com</a></p>';
       document.body.append(success);
       success.querySelector('button').addEventListener('click', () => success.close());
       success.addEventListener('click', e => { if (e.target === success) success.close(); });
