@@ -5,7 +5,8 @@ const safe = value => value.replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;'
 module.exports = async (req, res) => {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') return res.status(405).json({error: 'Method not allowed'});
-  const configured = ['SMTP_USER','SMTP_PASS','RECEIVER_EMAIL','RECAPTCHA_SECRET_KEY'].every(key => process.env[key]);
+  const captchaEnabled = process.env.CAPTCHA_ENABLED === 'true';
+  const configured = ['SMTP_USER','SMTP_PASS','RECEIVER_EMAIL', ...(captchaEnabled ? ['RECAPTCHA_SECRET_KEY'] : [])].every(key => process.env[key]);
   if (!configured) return res.status(503).json({error: 'Enquiries are temporarily unavailable. Please try again later.'});
   const origin = req.headers.origin;
   if (origin) {
@@ -31,8 +32,9 @@ module.exports = async (req, res) => {
   if (travellers && (!/^\d{1,2}$/.test(travellers) || +travellers < 1 || +travellers > 50)) return res.status(400).json({error: 'Please enter 1 to 50 travellers.'});
   const issuedAt = Number(body.issuedAt);
   if (!Number.isFinite(issuedAt) || Date.now() - issuedAt < 2000 || Date.now() - issuedAt > 3600000) return res.status(400).json({error: 'Please reopen the form and try again.'});
-  if (!body.recaptchaToken || typeof body.recaptchaToken !== 'string' || body.recaptchaToken.length > 2048) return res.status(400).json({error: 'Please complete the security check.'});
+  if (captchaEnabled && (!body.recaptchaToken || typeof body.recaptchaToken !== 'string' || body.recaptchaToken.length > 2048)) return res.status(400).json({error: 'Please complete the security check.'});
   try {
+    if (captchaEnabled) {
     const verification = await fetch('https://www.google.com/recaptcha/api/siteverify', {
       method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       body: new URLSearchParams({secret: process.env.RECAPTCHA_SECRET_KEY, response: body.recaptchaToken})
@@ -47,6 +49,7 @@ module.exports = async (req, res) => {
       return res.status(400).json({error: 'Security check failed. Please try again.'});
     }
     if (challenge.hostname && challenge.hostname !== req.headers.host?.split(':')[0]) return res.status(400).json({error: 'CAPTCHA domain does not match this website.'});
+    }
     const details = {Name:name, Country:country, Email:email, Mobile:mobile, 'Travel date':travelDate || 'Not provided', Travellers:travellers || 'Not provided', Page:sourcePage || 'Unknown', Section:sourceSection || 'General enquiry', URL:pageUrl || 'Not provided', Message:message};
     const text = Object.entries(details).map(([key,value]) => `${key}: ${value}`).join('\n');
     const html = `<div style="font-family:Arial,sans-serif;max-width:640px;margin:auto;color:#321e16"><h1 style="color:#820000">New Pushkar enquiry</h1>${Object.entries(details).map(([key,value]) => `<p><strong>${safe(key)}:</strong><br>${safe(value).replace(/\n/g,'<br>')}</p>`).join('')}</div>`;

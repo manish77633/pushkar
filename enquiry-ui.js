@@ -30,7 +30,8 @@
   let issuedAt = Date.now();
   let widgetId = null;
   let siteKey = '';
-  const config = fetch('/api/enquiry-config').then(response => response.json()).then(data => { siteKey = data.siteKey || ''; }).catch(() => {});
+  let captchaEnabled = false;
+  const config = fetch('/api/enquiry-config').then(response => response.json()).then(data => { captchaEnabled = data.captchaEnabled === true; siteKey = data.siteKey || ''; }).catch(() => {});
   let recaptchaReady;
   const loadRecaptcha = () => {
     if (window.grecaptcha?.render) return Promise.resolve();
@@ -45,6 +46,7 @@
   };
   const prepareSecurity = async () => {
     await config;
+    if (!captchaEnabled) return;
     if (!siteKey) { status.textContent = 'Enquiries are temporarily unavailable. Please try again later.'; return; }
     try {
       await loadRecaptcha();
@@ -56,8 +58,8 @@
   form.addEventListener('submit', async event => {
     event.preventDefault();
     if (!form.reportValidity() || submit.disabled) return;
-    const token = widgetId === null ? '' : window.grecaptcha.getResponse(widgetId);
-    if (!token) { status.textContent = 'Please complete the security check.'; return; }
+    const token = captchaEnabled && widgetId !== null ? window.grecaptcha.getResponse(widgetId) : '';
+    if (captchaEnabled && !token) { status.textContent = 'Please complete the security check.'; return; }
     submit.disabled = true;
     submit.textContent = 'Sending…';
     status.textContent = '';
@@ -76,7 +78,7 @@
       success.addEventListener('close', () => success.remove());
       success.showModal();
     } catch (error) {
-      status.textContent = `${error.message} Complete the CAPTCHA again before retrying.`;
+      status.textContent = `${error.message}${captchaEnabled ? ' Complete the CAPTCHA again before retrying.' : ''}`;
       if (widgetId !== null) window.grecaptcha.reset(widgetId);
       status.setAttribute('tabindex', '-1');
       status.focus();

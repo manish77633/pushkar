@@ -7,6 +7,7 @@ for (const key of ['SMTP_USER','SMTP_PASS','RECEIVER_EMAIL','RECAPTCHA_SECRET_KE
 const valid = () => ({name:'Jane Doe',country:'India',email:'jane@example.com',mobile:'9876543210',message:'I would like to visit Pushkar.',issuedAt:Date.now()-10000,recaptchaToken:'valid',sourcePage:'Pushkar Fair',sourceSection:'Tour itinerary',pageUrl:'https://example.com/pushkar-fair',website:''});
 let sent, failMail, invalidChallenge, captchaErrorCode;
 beforeEach(() => {
+  process.env.CAPTCHA_ENABLED = 'false';
   sent = []; failMail = false; invalidChallenge = false; captchaErrorCode = '';
   nodemailer.createTransport = () => ({sendMail: async data => { if (failMail) throw Object.assign(new Error('SMTP unavailable'), {code:'ECONNECTION'}); sent.push(data); }});
   global.fetch = async (url, options) => {
@@ -24,16 +25,23 @@ test('valid enquiry sends email with page and section', async () => {
   const response = await request(); assert.equal(response.code,200); assert.equal(sent.length,1);
   assert.match(sent[0].text,/Tour itinerary/); assert.equal(sent[0].replyTo,'jane@example.com');
 });
+test('temporary CAPTCHA bypass sends without a token or verification request', async () => {
+  const response = await request({...valid(), recaptchaToken: ''});
+  assert.equal(response.code, 200);
+  assert.equal(sent.length, 1);
+});
 test('invalid email and missing fields are rejected', async () => {
   assert.equal((await request({...valid(),email:'wrong'})).code,400);
   assert.equal((await request({...valid(),name:''})).code,400);
   assert.equal(sent.length,0);
 });
 test('reCAPTCHA and honeypot reject spam', async () => {
+  process.env.CAPTCHA_ENABLED = 'true';
   invalidChallenge=true; assert.equal((await request()).code,400);
   invalidChallenge=false; assert.equal((await request({...valid(),website:'spam'})).code,400);
 });
 test('invalid reCAPTCHA secret reports setup error', async () => {
+  process.env.CAPTCHA_ENABLED = 'true';
   invalidChallenge=true; captchaErrorCode='invalid-input-secret';
   const response=await request();
   assert.equal(response.code,503);
